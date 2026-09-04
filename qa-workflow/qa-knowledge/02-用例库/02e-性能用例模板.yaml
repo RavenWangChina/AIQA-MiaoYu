@@ -1,0 +1,22 @@
+# 性能用例模板（02e）——服务端压测 + 移动端性能专项
+# 双通道：服务端指标(k6 阈值断言) x 客户端指标(App 内存/CPU/FPS 采集)
+id: PERF-<模块>-<编号>
+name: <用例标题>
+tags: [performance]
+allure:
+  epic: <产品域>
+  feature: <模块>
+  story: <功能点>
+server_side:                      # 通道A：k6
+  script: <k6脚本路径.js>
+  load_profile: {vus: 50, duration: "5m"}
+  thresholds:                     # 阈值断言，任一失败=FAIL
+    - "http_req_duration: p(95)<500"
+    - "http_req_failed: rate<0.01"
+client_side:                      # 通道B：移动端采集（压测同时进行，时间戳对齐）
+  collect: [memory 内存, cpu, fps 流畅度, startup_ms 启动时间]
+  limits: {memory_mb_max: 400, startup_ms_max: 3000}
+  tool: "adb dumpsys / perfetto"
+record:
+  证据目录: "04-报告库/轮次/<轮次>/perf/"
+  判定: "服务端扛住但客户端超限 → 仍记 BUG"

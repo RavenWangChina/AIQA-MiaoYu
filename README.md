@@ -11,7 +11,7 @@
 
 | 路径 | 内容 |
 |------|------|
-| [qa-workflow/](qa-workflow/) | 测试工作流包：知识库模板×12、五个从对话定义、主对话编排宪法、selfcheck 自检、工具安装脚本、契约测试×10 |
+| [qa-workflow/](qa-workflow/) | 测试工作流包：知识库模板体系 v2（00-03 域 24 个：12 基础 + 12 实战扩充）、五个从对话定义、主对话编排宪法、selfcheck 自检、工具安装脚本、契约测试×10 |
 | [qa-workflow/docs/2026-09-02-qa-test-workflow-design.html](qa-workflow/docs/2026-09-02-qa-test-workflow-design.html) | 设计文档·静态网页版（自包含单文件，可直接部署到任意静态服务器） |
 | [qa-workflow/docs/部署手册.md](qa-workflow/docs/部署手册.md) | 五步部署到新机器 |
 | [docs/2026-09-02-qa-test-workflow-design.md](docs/2026-09-02-qa-test-workflow-design.md) | 设计文档（spec 原文） |
@@ -24,6 +24,17 @@
 1. 拷 `qa-workflow/` 到目标机器 → `python scripts/selfcheck.py` 自检
 2. 跑 `tools/install-batch1.ps1` 装第一批工具（k6/Allure/Schemathesis/zentao-cli）
 3. 在包根开 Claude Code，按 CLAUDE.md 宪法走「考古 → 双用例 → 执行 → 报告」闭环
+
+## 模板体系 v2（2026-09-04，真实智能音箱项目实战验证后扩充）
+
+首批落地 00-03 域 24 个模板（12 基础 + 12 新增，另有 7 个基础模板增强）：
+
+- **00 治理域**：00-索引（+度量看板/任务队列/知识过期警告）、00b 仓库注册表（多仓接入）、00c 设备池清单（真机/模拟器能力保真度标签）
+- **01 认知域**：模块卡片（+绑定基线/过期检测）、01d 环境依赖卡
+- **02 用例域**：L1-L4（+Allure 层级/双通道标注/设计方法/SBTM charter）、02e 性能（k6×客户端双通道）、02f 稳定性（随机×soak）、02g 兼容矩阵、02h 安全（白盒×黑盒）、02i 升级迁移、02j 设备在环（蓝牙/音频通路，产品域专项）、02k 逆向对抗矩阵
+- **03 BUG 域**：报告（+failed/broken 二分/flaky 标记）、03c BUG 状态跟踪表（本地状态机×禅道映射）、03d flaky 登记表
+
+05 流程运营域（任务卡/拆分单/新仓接入/回归触发/审计/凭据）随机制建设分批落地。
 
 ## 核心设计
 

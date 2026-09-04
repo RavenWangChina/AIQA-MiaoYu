@@ -1,0 +1,19 @@
+# 安全用例模板（02h）——白盒静态 x 黑盒动态
+id: SEC-<模块>-<编号>
+name: <安全检查标题>
+tags: [security]
+allure:
+  epic: <产品域>
+  feature: <模块>
+static_side:                      # 通道A：白盒（semgrep 源码扫描）
+  rules: "<规则集/语言>"
+  scope: "<仓库/目录>"
+dynamic_side:                     # 通道B：黑盒（ZAP 主动扫描 / nuclei 模板）
+  target: "<被测端点/App 流量代理>"
+  zap_policy: "baseline / active"
+checks:                           # 专项核对（可多选）
+  - 权限最小化: "App 申请权限 vs 功能实际需要清单逐项对照"
+  - 敏感数据泄漏: "日志/抓包/本地存储中明文密码、token、个人信息扫描"
+  - 鉴权绕过: "未带 token / 篡改 token 访问受保护接口"
+record:
+  判定: "双向发现合并去重；静态报+动态未报不等于安全（反之亦然）"

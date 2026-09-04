@@ -1,0 +1,23 @@
+# 设备在环用例模板（02j）——产品域专项：真机+音响硬件
+# 音频客观指标字段位保留（工具选型后定，当前允许人工记录）
+id: HWIL-<模块>-<编号>
+name: <设备在环场景标题>
+tags: [device-in-loop]
+allure:
+  epic: <产品域>
+  feature: <模块>
+devices:                          # 引用 00c 设备池（必须含真机）
+  - "real-01（音箱套装）"
+  - "test-phone-01（控制端手机）"
+scenario:
+  type: "蓝牙配网 / WIFI配网 / 音频通路 / 设备联动"
+  steps:
+    - "<人机分工标注的操作步骤（人工:xxx / 自动:xxx）>"
+audio_objective:                  # 音频客观指标（选型后填工具自动采集）
+  tool: "待选型（录音采集+分析插件 / 音卡）"
+  metrics: {latency_ms: null, packet_loss: null, concurrent_streams: null, quality_score: null}
+subjective:                       # 主观评价（客观工具未就绪时的过渡）
+  listener: "人工听感记录（杂音/断续/延迟感受，结构化打分）"
+record:
+  证据: "录音文件 / 录屏 / 设备日志（adb logcat + 音箱日志如可得）"
+  判定: "音频断续/延迟超感知阈值/配网失败 → 设备在环 BUG（硬件参与，复现概率必记）"

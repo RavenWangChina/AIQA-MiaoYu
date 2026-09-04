@@ -1,0 +1,19 @@
+# 稳定性场景模板（02f）——随机破坏 x 持续观察
+# 通道A：随机破坏（Fastbot/monkey 智能随机）通道B：长时 soak 观察
+id: STAB-<模块>-<编号>
+name: <场景标题>
+tags: [stability]
+allure:
+  epic: <产品域>
+  feature: <模块>
+chaos_side:                       # 通道A
+  tool: "fastbot / adb shell monkey -p <包名> --throttle 300"
+  duration: "30m"
+  crash_watch: "logcat 看门狗：FATAL/ANR/tombstone 自动捕获"
+soak_side:                        # 通道B：长时观察窗（soak）
+  loop: "pytest 长时循环用例（核心路径 N 小时）"
+  memory_leak_window: "内存泄漏检测：每 10min 采样内存，曲线单调上涨为泄漏候选"
+  network_churn: "周期性断网恢复（Toxiproxy 注入）"
+record:
+  产物: "crash 日志 / 内存曲线图 / ANR trace"
+  判定: "任何 crash/ANR/泄漏候选 → BUG 库"

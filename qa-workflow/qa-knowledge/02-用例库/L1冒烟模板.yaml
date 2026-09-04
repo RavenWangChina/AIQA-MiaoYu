@@ -5,6 +5,9 @@ name: 冒烟-<模块名>-主路径
 tags:
   - L1
   - <模块名>
+allure:
+  epic: <产品域>
+  feature: <模块>
 ---
 - launchApp
 - assertVisible: ".*<主页面关键元素>.*"

@@ -1,0 +1,19 @@
+# 兼容矩阵模板（02g）——设备xAPIx分辨率 用例映射
+id: COMPAT-<编号>
+name: <兼容范围标题>
+tags: [compatibility]
+allure:
+  epic: <产品域>
+matrix:                           # 每格=一台目标设备组合
+  - device: <机型1>
+    api_level: 31
+    resolution: "1080x2400"
+    cases: [TC-<模块>-001, TC-<模块>-002]   # 该组合跑哪些用例
+  - device: <机型2>
+    api_level: 36
+    resolution: "1440x3200"
+    cases: [TC-<模块>-001]                  # 抽样跑核心路径
+selection_rule: "全量组合成本过高时：新设备全跑 + 老设备抽样（核心路径）；发布前全量回归"
+device_source: "00c-设备池清单（真机+AVD）"
+record:
+  判定: "同用例在不同组合结果不一致 → 兼容性 BUG（标注组合）"
