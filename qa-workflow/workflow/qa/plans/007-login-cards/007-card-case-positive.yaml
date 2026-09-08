@@ -1,0 +1,34 @@
+# 任务卡：登录模块正向用例（SWAN-20260907 轮 2/3）
+schema_version: "1.1"
+task_id: "TASK-20260907-002-login-case-positive"
+data_label: "TEST-SYNTHETIC"
+event_source: manual
+split_from: ""
+role_variant: "case-positive"
+baseline:
+  - {repo: "[COMPANY] Network-FlutterApp", commit: "[COMMIT_HASH]"}
+  - {repo: "[company-]network_flutter_core", commit: "[COMMIT_HASH]"}
+scope:
+  repositories: ["E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp", "E:\\[TARGET_APP]\\repos\\flutter\\[company-]network_flutter_core"]
+  modules: ["login"]
+  levels: ["L2"]
+allowed_operations:
+  - "读模块卡片与源码（只读）"
+  - "写入 02-用例库：login 正向用例集（yaml）"
+prohibited_operations:
+  - "执行测试、提 BUG"
+  - "修改源码、提交推送"
+  - "破坏性输入设计（那是另一条通道的职责）"
+  - "写入 03-BUG库 / session-state / 00-索引"
+acceptance:
+  - "按 templates-v2/02-L2功能.yaml 字段产出（含 method_design 用例设计方法、双通道 channels、Maestro tags、Allure epic/feature/story 层级）"
+  - "覆盖：隐私弹窗同意→登录页；短信两步登录主路径；密码登录主路径；模式切换；协议勾选联动；60s 倒计时与同号复用；验证码满4位自动提交；第三方登录入口与 50015→bind-phone 正向路径；登出 4 触发点的正向清理；登录成功进 AppShell"
+  - "每条用例标注 HiviTestIds / ValueKey 定位符（卡片自动化定位节）"
+  - "第三方登录真实授权类用例标注 device/third-party 依赖（预期执行阶段可能 BLOCKED）"
+  - "范围外：扫码登录(pad)确认页、平台授权(QQ/网易/酷狗/Qobuz)绑定——不设计"
+paths:
+  knowledge_root: "F:\\[TARGET_APP]-Toolchain\\docs\\qa-knowledge"
+  module_card: "F:\\[TARGET_APP]-Toolchain\\docs\\qa-knowledge\\01-系统认知\\模块卡片-login.md"
+  result_dir: "F:\\[TARGET_APP]-Toolchain\\results\\TASK-20260907-002-login-case-positive"
+report_format: [status, case_count, coverage_summary, output_paths, open_questions]
+language: zh

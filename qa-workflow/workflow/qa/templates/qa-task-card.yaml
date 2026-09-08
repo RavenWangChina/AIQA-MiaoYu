@@ -1,0 +1,39 @@
+schema_version: "1.0"
+task_id: "SWAN-YYYYMMDD-001-topic"
+project: "<project-name>"
+baseline:
+  branch: "<branch>"
+  commit: "<full-commit>"
+scope:
+  repositories: []
+  modules: []
+  environments: ["local"]
+allowed_operations:
+  - "read"
+data_label: "test"
+paths:
+  code_root: "E:\\[TARGET_APP]"
+  result_dir: "F:\\[TARGET_APP]-Toolchain\\results\\<task-id>"
+  data_root: "G:\\[TARGET_APP]-Data\\test"
+acceptance:
+  - "<command, screenshot, log, or interface evidence>"
+test_matrix:
+  levels: ["L1"]
+  dimensions: ["positive"]
+  injection: "<boundary, offline, concurrency, or none>"
+  recovery: "<expected recovery condition>"
+  evidence_required: ["command-output"]
+prohibited_operations:
+  - "commit"
+  - "push"
+  - "production-access"
+  - "permission-change"
+report_format:
+  required:
+    - "status"
+    - "actual_baseline"
+    - "commands"
+    - "evidence_paths"
+    - "blockers"
+    - "risks"
+    - "next_step"

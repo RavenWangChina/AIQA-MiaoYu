@@ -1,0 +1,41 @@
+# 任务卡：登录模块逆向用例（SWAN-20260907 轮 2/3，与正向互盲）
+schema_version: "1.1"
+task_id: "TASK-20260907-003-login-case-negative"
+data_label: "TEST-SYNTHETIC"
+event_source: manual
+split_from: ""
+role_variant: "case-negative"
+baseline:
+  - {repo: "[COMPANY] Network-FlutterApp", commit: "[COMMIT_HASH]"}
+  - {repo: "[company-]network_flutter_core", commit: "[COMMIT_HASH]"}
+scope:
+  repositories: ["E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp", "E:\\[TARGET_APP]\\repos\\flutter\\[company-]network_flutter_core"]
+  modules: ["login"]
+  levels: ["L2"]
+allowed_operations:
+  - "读模块卡片与源码（只读）"
+  - "写入 02-用例库：login 逆向用例集（yaml，按 02k 逆向对抗矩阵维度组织）"
+prohibited_operations:
+  - "执行测试、提 BUG"
+  - "修改源码、提交推送"
+  - "正向主路径/数据流用例（那是另一条通道的职责）"
+  - "写入 03-BUG库 / session-state / 00-索引"
+acceptance:
+  - "按 templates-v2/02k-逆向对抗矩阵.yaml 维度产出（空值/超长/非法格式/断网/超时/中断/并发/重复提交/权限缺失/状态跳跃/服务降级/回退），并兼容 02-L2 字段（method_design/channels/tags）"
+  - "必覆盖维度（源自模块卡片已知坑，逐条对应）："
+  - "  - 会话失效三码 30003/30001/40006 清栈回登录页、2s 去重窗口、登出后在途失效码不误报"
+  - "  - token 明文+启动不校验：篡改 auth_token 冷启动直进 authenticated 的暴露时点"
+  - "  - 验证码：错误码/过期码/autofill 防重（同码重试无反应是设计行为）、冷却丢失（杀进程）、改号清零、发码频繁"
+  - "  - 密码 maxLength 16 边界、非法字符、错误密码"
+  - "  - 断网/超时：连接类错误文案收敛（不透出英文原文）、区号 MXNZP 外部接口失败回退内置热门区号"
+  - "  - 并发/重复提交：_smsLoginInFlight、_thirdPartyLoginInFlight、双击主按钮"
+  - "  - 隐私弹窗不同意→exitApp；PopScope canPop:false 不可返回"
+  - "  - 登出失败保留 token；切服不请求旧服 logout（服务端会话残留）"
+  - "  - 50015 绑定页异常输入与状态跳跃"
+  - "预期行为=卡片契约时标 expected 为设计行为；疑似缺陷标 suspected-defect 供报告从甄别"
+paths:
+  knowledge_root: "F:\\[TARGET_APP]-Toolchain\\docs\\qa-knowledge"
+  module_card: "F:\\[TARGET_APP]-Toolchain\\docs\\qa-knowledge\\01-系统认知\\模块卡片-login.md"
+  result_dir: "F:\\[TARGET_APP]-Toolchain\\results\\TASK-20260907-003-login-case-negative"
+report_format: [status, case_count, dimension_coverage, output_paths, open_questions]
+language: zh

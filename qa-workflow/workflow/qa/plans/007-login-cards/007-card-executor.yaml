@@ -1,0 +1,45 @@
+# 任务卡：登录模块 L2 双通道执行（SWAN-20260907 轮 3/3）
+schema_version: "1.1"
+task_id: "TASK-20260907-005-login-execution"
+data_label: "TEST-SYNTHETIC"
+event_source: manual
+split_from: "TASK-20260907-004-login-merged"
+role_variant: "executor"
+baseline:
+  - {repo: "[COMPANY] Network-FlutterApp", commit: "[COMMIT_HASH]"}
+  - {repo: "[company-]network_flutter_core", commit: "[COMMIT_HASH]"}
+scope:
+  repositories: ["E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp", "E:\\[TARGET_APP]\\repos\\flutter\\[company-]network_flutter_core"]
+  modules: ["login"]
+  levels: ["L2"]
+  channels: ["assertion", "visual"]   # visual 仅 LOGIN-L2-POS-001（隐私弹窗复刻）
+allowed_operations:
+  - "安装/启动 Debug 包（base URL 必须为测试服 http://[TRACKER_IP]/api，执行前抓包核验）"
+  - "adb / Maestro / hierarchy / 截图 / 日志采集"
+  - "调用测试服 /user/captcha、/user/login 等接口做契约级验证（仅测试服）"
+  - "设备侧清数据、注入 SharedPreferences（NEG-TOKEN 组需 debug 可写存储）"
+  - "写 result_dir 下全部产物（progress.md / evidence/ / heartbeat）"
+prohibited_operations:
+  - "修改业务源码、提交、推送、写共享配置"
+  - "触达生产 base（network.[company].com）或任何生产资源"
+  - "提 BUG（候选记 suspected-defect 交报告从）"
+  - "真实第三方账号授权（缺失即 BLOCKED，不 Mock 真实 SDK 凭据）"
+acceptance:
+  - "执行合并清单 F:\\[TARGET_APP]-Toolchain\\results\\TASK-20260907-004-login-merged\\merged-cases.yaml 全部 40 单元；会话 token 组执行前重读 02-用例库\\login\\ 目录（NEG-TOKEN-003 TTL 用例由逆向从补充中，落盘后纳入执行）"
+  - "组顺序：启动闸门组 → 短信组 → 密码组 → 网络韧性组 → 会话/token组 → 第三方组 → 压测探针组；前置缺失的组整组记 BLOCKED 并注明子类型（credential-required / env / tool），不得判业务失败"
+  - "短信验证码：调 /user/captcha 后由主对话协调人工回读（凭据别名 acct-[app-]mobile），每个需收码的步骤在 progress.md 标注等待点；合成号码用于无需真收码的用例"
+  - "每单元更新 progress.md 红绿灯（🟢/🔴/🟡/⏳ + 耗时 + 证据路径）；证据不齐的通过结论一律记 待验证"
+  - "代理注入类用例（NEG-NET/SESS/BIND/CONC）若无代理工具，整组 BLOCKED(tool) 并列清单"
+  - "ANR 探针 NEG-ANR-001 单独排期最后执行；出现 ANR 按 P-003 流程取证，不进业务断言"
+paths:
+  knowledge_root: "F:\\[TARGET_APP]-Toolchain\\docs\\qa-knowledge"
+  merged_list: "F:\\[TARGET_APP]-Toolchain\\results\\TASK-20260907-004-login-merged\\merged-cases.yaml"
+  case_library: "F:\\[TARGET_APP]-Toolchain\\docs\\qa-knowledge\\02-用例库\\login\\"
+  module_card: "F:\\[TARGET_APP]-Toolchain\\docs\\qa-knowledge\\01-系统认知\\模块卡片-login.md"
+  result_dir: "F:\\[TARGET_APP]-Toolchain\\results\\TASK-20260907-005-login-execution"
+  data_root: "G:\\[TARGET_APP]-Data"
+report_format: [status, actual_baseline, executed_count, pass_fail_blocked_counts, evidence_paths, blockers, suspected_defects, next_step]
+heartbeat: {interval_min: 5, file: "<result_dir>/evidence/heartbeat.txt"}
+progress_board: "<result_dir>/progress.md"
+timeout: {expected_min: 45, max_min: 120}
+language: zh

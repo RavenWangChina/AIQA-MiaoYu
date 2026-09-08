@@ -1,0 +1,34 @@
+model_list:
+  - model_name: [company-]default
+    litellm_params:
+      model: openai/[MODEL]
+      api_key: os.environ/UPSTREAM_API_KEY
+  - model_name: [company-]default-fallback
+    litellm_params:
+      model: openai/[MODEL]
+      api_key: os.environ/UPSTREAM_API_KEY
+
+router_settings:
+  redis_url: os.environ/REDIS_URL
+  num_retries: 3
+  timeout: 30
+  cooldown_time: 120
+  allowed_fails_policy:
+    AuthenticationErrorAllowedFails: 1
+    TimeoutErrorAllowedFails: 3
+  fallbacks:
+    - [company-]default: [[company-]default-fallback]
+  optional_pre_call_checks:
+    - responses_api_deployment_check
+    - encrypted_content_affinity
+    - session_affinity
+    - deployment_affinity
+  deployment_affinity_ttl_seconds: 3600
+
+general_settings:
+  background_health_checks: true
+  health_check_interval: 60
+  enable_health_check_routing: true
+
+litellm_settings:
+  store_model_in_cache: true

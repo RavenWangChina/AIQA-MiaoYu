@@ -1,0 +1,29 @@
+﻿# 任务卡（承接适配版 11 字段 + 角色边界 variant + 事件来源）
+schema_version: "1.1"
+task_id: "SWAN-YYYYMMDD-NNN-slug"
+data_label: "TEST-SYNTHETIC"
+event_source: manual|git-event|zen-event|cron|external   # 三源入口标注
+split_from: ""        # 05b 拆分单引用
+role_variant: ""      # 角色边界（A2）：archaeologist|case-positive|case-negative|executor|reporter
+baseline: {repo: "", commit: ""}
+scope: {repositories: [], modules: [], levels: []}
+allowed_operations: []
+prohibited_operations: []
+acceptance: []
+paths: {code_root: "E:\[TARGET_APP]", result_dir: "F:\[TARGET_APP]-Toolchain
+esults\<task>", data_root: "G:\[TARGET_APP]-Data	est"}
+report_format: [status, actual_baseline, commands, evidence_paths, blockers, risks, next_step]
+language: zh            # 产出文档默认中文；代码/命令/字段名/测试ID 保留英文
+heartbeat: {interval_min: 5, file: "<result_dir>/evidence/heartbeat.txt"}   # 执行中定期写（时间戳+当前动作）
+progress_board: "<result_dir>/progress.md"   # 实时红绿灯看板：每完成一条用例更新一行 | 用例 | 🟢PASS/🔴FAIL/🟡BLOCKED/⏳运行中 | 耗时 | 证据路径
+timeout: {expected_min: 20, max_min: 60}   # 超 expected 提示；超 max 标 STUCK 触发健康检查
+human_interruption_points: []   # v1.1 预声明人工中断点: [{when: 触发步骤, need: 需要什么(验证码/预置登录态), collection: 派发前收集|执行中经主对话向用户收集}]
+# v1.1 派发规则：主对话按每片 ≤3 个执行单元派发 executor，片间回报；人工输入尽量在派发前收集齐
+## 角色边界速查（spawn 任务单元会话时注入 prompt）
+# archaeologist: 读仓出卡片；禁止设计用例/执行/提BUG
+# case-positive: 主路径+数据流；禁止破坏性输入；禁读逆向中间产物
+# case-negative: 边界/非法/中断/并发；禁读正向中间产物
+# executor: 按卡跑命令采证据；无法执行标 BLOCKED
+# reporter: 只用执行证据生成报告；未经复核不得外发
+# 阻塞子类型：credential-required（需人提供凭证/预置登录态——挂起等人，非失败）| env | tool | permission
+

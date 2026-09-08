@@ -1,0 +1,11 @@
+# 双通道标注: channels: [assertion] / [assertion, visual]
+# Maestro tag 对齐: tags: [smoke|L2|L3|L4, flaky?, experimental?]
+# Allure 层级: epic / feature / story
+# 稳定性场景（Monkey/长时/内存泄漏）
+task_id: ""
+name: ""
+type: stability
+mode: monkey|soak|leak-watch
+duration: ""       # 时长
+watch_metrics: []   # 内存/Crash/ANR/错误率
+pass_criteria: ""

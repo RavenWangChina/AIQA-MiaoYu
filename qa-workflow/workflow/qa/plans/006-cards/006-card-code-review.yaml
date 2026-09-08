@@ -1,0 +1,37 @@
+schema_version: "1.1"
+task_id: "TASK-20260904-006-search-code-review"
+data_label: "TEST-SYNTHETIC"
+event_source: manual
+split_from: "TASK-20260904-005 阻塞分诊 + 源码审查机会"
+role_variant: archaeologist
+review_focus: true
+baseline:
+  repo: "E:\[TARGET_APP]\repos\flutter\[COMPANY] Network-FlutterApp"
+  commit: "[COMMIT_HASH]"
+scope:
+  repositories: ["E:\[TARGET_APP]\repos\flutter\[COMPANY] Network-FlutterApp", "E:\[TARGET_APP]\repos\flutter\[company-]network_flutter_core"]
+  modules: ["module-17-search"]
+  levels: [L2]
+allowed_operations:
+  - "read source only（纯读码，不执行任何 flutter/maestro/adb 命令，不碰模拟器）"
+  - "write findings to result_dir"
+prohibited_operations:
+  - "执行任何构建/测试/设备命令（与005并行，工具链互斥纪律）"
+  - "修改源码；commit/push"
+review_targets:
+  - "搜索输入校验：精确边界值（长度上限/字符集限制/节流防抖）——回填逆向用例校准值"
+  - "ANR 嫌疑：启动链路与搜索初始化的主线程重活（同步 IO/重计算/锁等待）"
+  - "异步竞态：搜索请求 latest-wins 实现的真实性（取消机制存在与否）"
+  - "错误分支：吞异常/空 catch/失败静默"
+  - "资源泄漏：未取消的订阅/定时器/流"
+inputs:
+  module_card: "F:\[TARGET_APP]-Toolchain\docs\qa-knowledge\01-系统认知\模块卡片-search.md"
+  known_patterns: "F:\[TARGET_APP]-Toolchain\results\TASK-20260904-002-core-defect-triage\defect-triage-matrix.md"
+acceptance:
+  - "源码级缺陷候选清单（每条：文件:行号/问题描述/严重级初判/证据=代码片段引用）按 03-BUG 模板格式写 result_dir\findings.md"
+  - "逆向用例校准值表（输入限制的真实精确值）写 result_dir\calibration.md"
+  - "ANR 嫌疑点定位：主线程风险点排序，写 findings.md 专节"
+paths:
+  result_dir: "F:\[TARGET_APP]-Toolchain\results\TASK-20260904-006-search-code-review"
+report_format: [status, actual_baseline, commands, evidence_paths, blockers, risks, next_step]
+language: zh

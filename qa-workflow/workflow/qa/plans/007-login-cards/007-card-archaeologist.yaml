@@ -1,0 +1,34 @@
+# 任务卡：登录模块考古（SWAN-20260907 轮 1/3）
+schema_version: "1.1"
+task_id: "TASK-20260907-001-login-archaeology"
+data_label: "TEST-SYNTHETIC"
+event_source: manual
+split_from: ""
+role_variant: "archaeologist"
+baseline:
+  - {repo: "[COMPANY] Network-FlutterApp", commit: "[COMMIT_HASH]"}
+  - {repo: "[company-]network_flutter_core", commit: "[COMMIT_HASH]"}
+scope:
+  repositories: ["E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp", "E:\\[TARGET_APP]\\repos\\flutter\\[company-]network_flutter_core"]
+  modules: ["login"]   # 登录 UI 入口、登录流程、token/session 存储与刷新、登出
+  levels: []           # 考古不涉及 L1-L4
+allowed_operations:
+  - "只读仓库操作（Read/Grep/Glob/本地 git 只读命令）"
+  - "写入知识库 01-系统认知：模块卡片-login.md + 接口清单"
+prohibited_operations:
+  - "设计用例、执行测试、提 BUG"
+  - "修改业务源码、提交、推送、改权限"
+  - "连接生产资源、写共享配置"
+  - "写入 02-用例库 或 03-BUG库"
+acceptance:
+  - "产出 01-系统认知/模块卡片-login.md（含入口页面、路由、依赖的 Core 接口、状态存储、错误处理路径）"
+  - "接口清单覆盖：登录请求/响应契约、token 存储位置、刷新与失效逻辑、登出清理"
+  - "标注与 module-17-search、ANR 候选（BUG-20260904-004）的关联点（如有）"
+  - "标注考古基线 commit 与发现的未决问题"
+paths:
+  code_root: "E:\\[TARGET_APP]\\repos\\flutter"
+  knowledge_root: "F:\\[TARGET_APP]-Toolchain\\docs\\qa-knowledge"
+  result_dir: "F:\\[TARGET_APP]-Toolchain\\results\\TASK-20260907-001-login-archaeology"
+  data_root: "G:\\[TARGET_APP]-Data"
+report_format: [status, actual_baseline, evidence_paths, blockers, risks, next_step]
+language: zh

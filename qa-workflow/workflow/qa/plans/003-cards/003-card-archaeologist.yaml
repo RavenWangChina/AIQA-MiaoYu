@@ -1,0 +1,45 @@
+schema_version: "1.1"
+task_id: "TASK-20260904-003-search-archaeology"
+data_label: "TEST-SYNTHETIC"
+event_source: manual
+split_from: "TASK-20260904-003-search-split"
+role_variant: archaeologist
+baseline:
+  repo: "E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp"
+  branch: "dev"
+  commit: "[COMMIT_HASH]"
+scope:
+  repositories:
+    - "E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp"
+  modules:
+    - "module-17-search"
+  levels: [L1, L2, L3, L4]
+allowed_operations:
+  - "read source tree, manifests, routes, and existing tests"
+  - "trace search entry, navigation, data and dependency boundaries"
+  - "write the module card and archaeology evidence under the assigned result path"
+prohibited_operations:
+  - "design or execute positive cases"
+  - "design or execute negative/adversarial cases"
+  - "modify business source, tests, dependencies, or repository configuration"
+  - "create or submit BUG reports"
+  - "commit or push"
+acceptance:
+  - "identify search entry points and all reachable routes"
+  - "list core classes, providers/controllers, repositories, ports, APIs, and package dependencies"
+  - "record baseline commit, feature flags, platform branches, and known pitfalls with source locations"
+  - "produce a reusable module card in qa-knowledge and an evidence index"
+paths:
+  code_root: "E:\\[TARGET_APP]"
+  result_dir: "F:\\[TARGET_APP]-Toolchain\\results\\TASK-20260904-003-search-archaeology"
+  knowledge_output: "F:\\[TARGET_APP]-Toolchain\\docs\\qa-knowledge\\01-系统认知\\模块17-搜索.md"
+  data_root: "G:\\[TARGET_APP]-Data\\test"
+report_format: [status, actual_baseline, commands, evidence_paths, blockers, risks, next_step]
+execution:
+  mode: "read-only archaeology; no test execution"
+  expected_outputs:
+    - "module card: entry/routes/classes/interfaces/dependencies/known-pitfalls"
+    - "source-location evidence index"
+role_boundary:
+  responsibility: "建立模块17搜索的可复用系统认知与边界清单"
+  prohibitions: "不得设计用例、执行验证、读取其他通道中间产物或提报缺陷"

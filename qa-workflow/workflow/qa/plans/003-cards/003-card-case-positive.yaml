@@ -1,0 +1,107 @@
+schema_version: "1.1"
+task_id: "TASK-20260904-003-search-positive"
+data_label: "TEST-SYNTHETIC"
+event_source: manual
+split_from: "TASK-20260904-003-search-split"
+role_variant: case-positive
+baseline:
+  repo: "E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp"
+  branch: "dev"
+  commit: "[COMMIT_HASH]"
+scope:
+  repositories:
+    - "E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp"
+  modules:
+    - "module-17-search"
+  levels: [L2]
+  channels: [positive]
+allowed_operations:
+  - "read the search module contract and stable UI identifiers"
+  - "design synthetic main-path L2 cases and data-flow assertions"
+  - "write positive case definitions and evidence expectations under the assigned result path"
+prohibited_operations:
+  - "use destructive, malformed, offline, interrupted, or permission-denied inputs"
+  - "read or depend on any other channel artifact or result path"
+  - "execute tests, modify source/configuration, commit, or push"
+acceptance:
+  - "cover search input submission and result data flow"
+  - "cover history entry/reuse and six-tab navigation"
+  - "cover platform filtering and result actions (open/play/favorite/share as applicable)"
+  - "each case has precondition, steps, expected state, assertion/visual channel, and synthetic fixture"
+  - "use at least equivalence classes, boundary values, decision table, state transition, and error guessing fields"
+task_design:
+  template: "02-L2功能.yaml"
+  epic: "Module 17 Search"
+  feature: "App search main flow"
+  story: "User searches, filters, revisits history, and acts on results"
+  tags: [L2]
+  channels: [assertion, visual]
+  method_design:
+    equivalence_classes:
+      - class: "single_keyword"
+        input: "TEST-SYNTHETIC: ocean"
+        expected: "search request accepted; result list renders"
+      - class: "multi_keyword"
+        input: "TEST-SYNTHETIC: ocean night"
+        expected: "query preserved through tab changes"
+      - class: "history_reuse"
+        input: "select a previously saved synthetic query"
+        expected: "query restored and results reload"
+    boundary_values:
+      - field: "query_length"
+        value: "1 non-space character"
+        expected: "submit is available and request is formed"
+      - field: "tab_count"
+        value: "six supported tabs"
+        expected: "each tab maps to its platform/result section"
+      - field: "result_count"
+        value: "0, 1, and multiple synthetic results"
+        expected: "empty, singleton, and list states render distinctly"
+    decision_table:
+      - conditions: ["query accepted", "tab=all"]
+        actions: ["load aggregate result", "show platform grouping"]
+      - conditions: ["query accepted", "tab=specific platform"]
+        actions: ["apply platform filter", "retain query and history state"]
+      - conditions: ["result selected", "action supported"]
+        actions: ["dispatch mapped result action"]
+    state_transition:
+      - from: "idle"
+        event: "submit synthetic query"
+        to: "loading"
+        guard: "query contains accepted text"
+      - from: "loading"
+        event: "response received"
+        to: "results"
+        guard: "response contract is valid"
+      - from: "results"
+        event: "switch tab"
+        to: "filtered_results"
+        guard: "target tab is one of six supported tabs"
+      - from: "results"
+        event: "select history"
+        to: "loading"
+        guard: "history item contains synthetic query"
+    error_guessing:
+      - "query should remain visible after tab switch"
+      - "history should not duplicate an identical synthetic query"
+      - "result actions should carry the selected platform/type"
+      - "loading indicator should end when the response fixture completes"
+precondition: "Search route is reachable; synthetic fixtures and deterministic response stubs are available; no real account or production data"
+steps:
+  - do: "open the App search entry and submit a synthetic keyword"
+    expect: "search loading state appears, then aggregate results render"
+  - do: "open history and select the submitted synthetic query"
+    expect: "query is restored and results are requested once"
+  - do: "visit all six supported tabs"
+    expect: "each tab displays the expected platform-filtered data and retains query context"
+  - do: "select representative results and invoke supported actions"
+    expect: "action routing carries correct item/platform metadata and reports deterministic outcome"
+device: none
+paths:
+  code_root: "E:\\[TARGET_APP]"
+  result_dir: "F:\\[TARGET_APP]-Toolchain\\results\\TASK-20260904-003-search-positive"
+  data_root: "G:\\[TARGET_APP]-Data\\test\\TASK-20260904-003-search-positive"
+report_format: [status, actual_baseline, commands, evidence_paths, blockers, risks, next_step]
+role_boundary:
+  responsibility: "定义模块17搜索主路径、数据流与可观察验收条件"
+  prohibitions: "不得使用破坏性/非法输入，不得读取其他通道中间产物，不得执行测试或提报缺陷"

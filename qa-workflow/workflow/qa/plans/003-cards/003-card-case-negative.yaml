@@ -1,0 +1,98 @@
+schema_version: "1.1"
+task_id: "TASK-20260904-003-search-negative"
+data_label: "TEST-SYNTHETIC"
+event_source: manual
+split_from: "TASK-20260904-003-search-split"
+role_variant: case-negative
+baseline:
+  repo: "E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp"
+  branch: "dev"
+  commit: "[COMMIT_HASH]"
+scope:
+  repositories:
+    - "E:\\[TARGET_APP]\\repos\\flutter\\[COMPANY] Network-FlutterApp"
+  modules:
+    - "module-17-search"
+  levels: [L2]
+  channels: [negative]
+allowed_operations:
+  - "read the search module boundary and input validation contract"
+  - "design synthetic inverse/adversarial cases using the 02k matrix"
+  - "write negative case definitions and recovery expectations under the assigned result path"
+prohibited_operations:
+  - "read or depend on any other channel artifact or result path"
+  - "silently convert an invalid input into a valid one"
+  - "execute tests, modify source/configuration, commit, or push"
+acceptance:
+  - "cover every required 02k dimension with fixed synthetic input, expected behavior, recovery, and evidence field"
+  - "include empty/null, overlong, illegal format, offline, interruption, concurrency, and permission cases"
+  - "define safety expectations: no crash, no duplicate request, no stale result leakage, and recoverable state"
+  - "keep all fixtures synthetic and independent of other channel artifacts"
+task_design:
+  template: "02k-逆向对抗矩阵.yaml"
+  module: "module-17-search"
+  matrix:
+    - dimension: "空值"
+      input: "null, empty string, and whitespace-only synthetic query"
+      expected: "no network request; validation/empty state is explicit; UI remains usable"
+      exit_code: "N/A"
+      recovery: "enter an accepted synthetic keyword"
+      repro_count: 0
+      evidence: "validation state and request counter"
+    - dimension: "超长"
+      input: "synthetic query exceeding documented maximum by one and by 10x"
+      expected: "bounded input handling; no overflow or unbounded request payload"
+      exit_code: "N/A"
+      recovery: "replace with bounded synthetic query"
+      repro_count: 0
+      evidence: "input length, rendered state, request payload length"
+    - dimension: "非法格式"
+      input: "control characters, unsupported separators, and malformed encoded text"
+      expected: "rejected or safely normalized according to contract; no route injection"
+      exit_code: "N/A"
+      recovery: "clear and enter a valid synthetic query"
+      repro_count: 0
+      evidence: "validation result and route/request trace"
+    - dimension: "断网"
+      input: "network unavailable before request and during response"
+      expected: "bounded error state with retry affordance; no infinite spinner"
+      exit_code: "N/A"
+      recovery: "restore synthetic network stub and retry once"
+      repro_count: 0
+      evidence: "network state, timeout/error, retry count"
+    - dimension: "中断"
+      input: "leave search route, background app, or cancel request during loading"
+      expected: "request is cancelled/ignored safely; stale response cannot update disposed view"
+      exit_code: "N/A"
+      recovery: "re-enter search route and issue a new synthetic query"
+      repro_count: 0
+      evidence: "lifecycle events, cancellation state, post-return UI state"
+    - dimension: "并发"
+      input: "submit two different synthetic queries in rapid succession"
+      expected: "latest request wins or requests are serialized by contract; no cross-query result mixing"
+      exit_code: "N/A"
+      recovery: "wait for the authoritative request and clear stale loading state"
+      repro_count: 0
+      evidence: "request IDs/order, query-to-result mapping, final state"
+    - dimension: "权限"
+      input: "history storage unavailable and platform result action denied"
+      expected: "permission error is explicit; search results remain isolated and app does not crash"
+      exit_code: "N/A"
+      recovery: "grant synthetic permission in stub and retry the isolated operation"
+      repro_count: 0
+      evidence: "permission response, fallback UI, retry outcome"
+precondition: "Search route and deterministic synthetic stubs are available; no real account, production endpoint, or external artifact is required"
+steps:
+  - do: "apply each matrix input independently to the search boundary"
+    expect: "the matrix expected outcome is observed without cross-case state leakage"
+  - do: "record recovery action after each blocked/error state"
+    expect: "the search surface returns to a defined idle/results state or reports a bounded blocker"
+device: none
+paths:
+  code_root: "E:\\[TARGET_APP]"
+  result_dir: "F:\\[TARGET_APP]-Toolchain\\results\\TASK-20260904-003-search-negative"
+  data_root: "G:\\[TARGET_APP]-Data\\test\\TASK-20260904-003-search-negative"
+report_format: [status, actual_baseline, commands, evidence_paths, blockers, risks, next_step]
+role_boundary:
+  responsibility: "定义模块17搜索的边界、异常、中断与并发对抗矩阵"
+  prohibitions: "不得读取其他通道中间产物，不得执行测试，不得修改业务代码或将未复现项宣称为缺陷"
